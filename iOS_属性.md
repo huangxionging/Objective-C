@@ -1,6 +1,6 @@
 ## 属性(property
 
-在出现属性以前, 我们创建变量的方式和 C++ 一样, 使用 **@protected**, **@public**, **@private**
+在出现 属性以前, 我们创建变量的方式和 C++ 一样, 使用 **@protected**, **@public**, **@private**
 
 ```Objective-C
 @interface Person: NSObject {
