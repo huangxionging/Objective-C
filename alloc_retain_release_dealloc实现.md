@@ -17,7 +17,7 @@ id _objc_rootAlloc(Class cls)
 
 static ALWAYS_INLINE id callAlloc(Class cls, bool checkNil, bool allocWithZone=false)
 {
-    // 如果 checkNil 为 true 并且类不存在则直接返回 nil
+    // 如果 checkNil 为 true 并且类不存在则直接返回 nil
     if (slowpath(checkNil && !cls)) return nil;
 // 如果 Objective-C 2.0
 #if __OBJC2__
