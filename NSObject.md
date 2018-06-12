@@ -70,16 +70,16 @@ struct _class_t {
 	struct _class_t *superclass; // 父类链表
 	void *cache; // 缓存
 	void *vtable; // 变量表
-	struct _class_ro_t *ro; // 只读常量链表
+	struct _class_ro_t *ro; // 只读常量链表
 };
 
-// category结构体
+// category结构体
 struct _category_t {
-	const char *name;
-	struct _class_t *cls;
-	const struct _method_list_t *instance_methods;
-	const struct _method_list_t *class_methods;
-	const struct _protocol_list_t *protocols;
-	const struct _prop_list_t *properties;
+	const char *name; // 名字
+	struct _class_t *cls; // 所属类
+	const struct _method_list_t *instance_methods; // 实例方法
+	const struct _method_list_t *class_methods; // 类方法
+	const struct _protocol_list_t *protocols; // 协议
+	const struct _prop_list_t *properties; // 属性
 };
 
