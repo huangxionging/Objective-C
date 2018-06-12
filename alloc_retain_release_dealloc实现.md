@@ -14,6 +14,8 @@ id _objc_rootAlloc(Class cls)
 
 // 宏定义 告诉编译器为0的概率比较大
 #define slowpath(x) (__builtin_expect(bool(x), 0))
+// 为 1 的概率比较大
+#define fastpath(x) (__builtin_expect(bool(x), 1))
 
 static ALWAYS_INLINE id callAlloc(Class cls, bool checkNil, bool allocWithZone=false)
 {
