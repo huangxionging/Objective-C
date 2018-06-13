@@ -757,4 +757,30 @@ static struct IMAGE_INFO { unsigned version; unsigned flag; } _OBJC_IMAGE_INFO =
 ```
 
 从以上代码可以看出
-Office 最后变成了 OBJC_METACLASS_\$_Office 和 OBJC_METACLASS_\$_Office
+Office 最后变成了 结构体 objc_object Office 以及结构体 OBJC_METACLASS_\$_Office 和 OBJC_CLASS\_$_Office
+这三个结构体构成了 Office 类
+
+OBJC_CLASS_SETUP 是一个指针数组, 元素指向 OBJC_CLASS_SETUP_$_Office 这个函数的地址
+OBJC_CLASS_SETUP\_\$_Office 这个函数会被调用
+```C
+static void OBJC_CLASS_SETUP_$_Office(void) {
+    // 设置元类的 isa 指针指向 NSObject 的元类
+    OBJC_METACLASS_$_Office.isa = &OBJC_METACLASS_$_NSObject;
+    // 设置元类的父类. 还是指向 NSObject 的元类
+    OBJC_METACLASS_$_Office.superclass = &OBJC_METACLASS_$_NSObject;
+    // 设置元类的方法缓存指针, 主要缓存类方法
+    OBJC_METACLASS_$_Office.cache = &_objc_empty_cache;
+    // 设置类的 isa 指针指向本类的元类
+    OBJC_CLASS_$_Office.isa = &OBJC_METACLASS_$_Office;
+    // 设置本类的父类指针指向 NSObject 的类
+    OBJC_CLASS_$_Office.superclass = &OBJC_CLASS_$_NSObject;
+    // 设置类的缓存, 这个主要会缓存实例方法
+    OBJC_CLASS_$_Office.cache = &_objc_empty_cache;
+}
+// _objc_empty_cache 是 objc_cache 结构体, 定义如下
+OBJC_EXPORT struct objc_cache _objc_empty_cache
+struct objc_cache {
+    unsigned int mask /* total = mask + 1 */                 OBJC2_UNAVAILABLE;
+    unsigned int occupied                                    OBJC2_UNAVAILABLE;
+    Method _Nullable buckets[1]                              OBJC2_UNAVAILABLE;
+};
