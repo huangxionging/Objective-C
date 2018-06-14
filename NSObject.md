@@ -878,7 +878,7 @@ struct _class_ro_t {
 第一个字段 flags 标记为1
 第二个字段 instanceStart, 开始位置为一个 _class_t 的大小
 第三个字段 instanceSize, 大小占一个 _class_t 的大小
-第四个字段 reserved 值为 0
+第四个字段 reserved 值为 0
 第五个字段 ivarLayout 值为 0
 第六个字段 name 表示类名, 这里值为 "Office"
 第七个字段 baseMethods 为_OBJC\_\$_CLASS_METHODS_Office, 存的是类方法,
@@ -918,14 +918,14 @@ static struct _class_ro_t _OBJC_CLASS_RO_$_Office = {
 ```
 从以上代码看出 _OBJC_CLASS_RO_$_Office
 第一个字段 flags 标记为0
-第二个字段 instanceStart, 起始位置为 偏移量为 objc_object Office的 _persons 变量位置, 这个根据变量定义顺序来决定的.
-第三个字段 instanceSize, 大小占一个 Office_IMPL 的大小, 也就是类实现的大小
-第四个字段 reserved 值为 0
-第五个字段 ivarLayout 值为 0
-第六个字段 name 表示类名, 这里值为 "Office"            
-第七个字段 baseMethods 为_OBJC\_\$_INSTANCE_METHODS_Office, 存的是实例方法,
-第八个字段 baseProtocols _OBJC_CLASS_PROTOCOLS\_\$_Office, 遵守的协议
-第九个字段 ivars _OBJC\_\$_INSTANCE_VARIABLES_Office 表示变量链表
-第十个字段 weakIvarLayout weak 变量布局为空
-第十一个字段 properties _OBJC\_\$_PROP_LIST_Office 表示属性链表
-以上是 Office metaClass
+第二个字段 instanceStart, 起始位置为 偏移量为 objc_object Office的 _persons 变量位置, 这个根据变量定义顺序来决定的.  
+第三个字段 instanceSize, 大小占一个 Office_IMPL 的大小, 也就是类实现的大小  
+第四个字段 reserved 值为 0  
+第五个字段 ivarLayout 值为 0  
+第六个字段 name 表示类名, 这里值为 "Office"              
+第七个字段 baseMethods 为_OBJC\_\$_INSTANCE_METHODS_Office, 存的是实例方法,  
+第八个字段 baseProtocols _OBJC_CLASS_PROTOCOLS\_\$_Office, 遵守的协议  
+第九个字段 ivars _OBJC\_\$_INSTANCE_VARIABLES_Office 表示变量链表  
+第十个字段 weakIvarLayout weak 变量布局为空  
+第十一个字段 properties _OBJC\_\$_PROP_LIST_Office 表示属性链表  
+以上是 Office metaClass  
