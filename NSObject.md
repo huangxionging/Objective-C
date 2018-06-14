@@ -431,6 +431,10 @@ struct objc_class : objc_object {
 
 @synthesize persons = _persons, light = _light;
 
++ (NSString *) descriptionClass {
+    return @"Office";
+}
+
 - (NSMutableArray *)persons {
     if (_persons == nil) {
         _persons = [[NSMutableArray alloc] init];
@@ -672,6 +676,16 @@ static struct /*_method_list_t*/ {
 	{(struct objc_selector *)"setLight:", "v24@0:8@16", (void *)_I_Office_setLight_}}
 };
 
+static struct /*_method_list_t*/ {
+	unsigned int entsize;  // sizeof(struct _objc_method)
+	unsigned int method_count;
+	struct _objc_method method_list[1];
+} _OBJC_$_CLASS_METHODS_Office __attribute__ ((used, section ("__DATA,__objc_const"))) = {
+	sizeof(_objc_method),
+	1,
+	{{(struct objc_selector *)"descriptionClass", "@16@0:8", (void *)_C_Office_descriptionClass}}
+};
+
 // 关联属性表
 static struct /*_prop_list_t*/ {
 	unsigned int entsize;  // sizeof(struct _prop_t)
@@ -690,7 +704,7 @@ static struct _class_ro_t _OBJC_METACLASS_RO_$_Office __attribute__ ((used, sect
 	(unsigned int)0, 
 	0, 
 	"Office",
-	0, 
+	(const struct _method_list_t *)&_OBJC_$_CLASS_METHODS_Office,
 	0, 
 	0, 
 	0, 
@@ -762,7 +776,7 @@ Office 最后变成了 结构体 objc_object Office 以及结构体 OBJC_METACL
 
 OBJC_CLASS_SETUP 是一个指针数组, 元素指向 OBJC_CLASS_SETUP_$_Office 这个函数的地址
 OBJC_CLASS_SETUP\_\$_Office 这个函数会被调用
-```C
+```C++
 static void OBJC_CLASS_SETUP_$_Office(void) {
     // 设置元类的 isa 指针指向 NSObject 的元类
     OBJC_METACLASS_$_Office.isa = &OBJC_METACLASS_$_NSObject;
@@ -777,10 +791,141 @@ static void OBJC_CLASS_SETUP_$_Office(void) {
     // 设置类的缓存, 这个主要会缓存实例方法
     OBJC_CLASS_$_Office.cache = &_objc_empty_cache;
 }
+
 // _objc_empty_cache 是 objc_cache 结构体, 定义如下
 OBJC_EXPORT struct objc_cache _objc_empty_cache
 struct objc_cache {
+    // 
     unsigned int mask /* total = mask + 1 */                 OBJC2_UNAVAILABLE;
     unsigned int occupied                                    OBJC2_UNAVAILABLE;
+    // 存储方法的结构体指针 bucket是的元素是指向
     Method _Nullable buckets[1]                              OBJC2_UNAVAILABLE;
 };
+// Method 是结构体指针
+typedef struct method_t *Method;
+struct method_t {
+    SEL name; // 方法名称
+    const char *types; // 类型
+    IMP imp; // 实现
+
+    // 排序
+    struct SortBySELAddress: public std::binary_function<const method_t&,const method_t&, bool>
+    {
+        bool operator() (const method_t& lhs, const method_t& rhs)
+        { 
+            return lhs.name < rhs.name; 
+        }
+    };
+};
+
+```
+OBJC_METACLASS_$_Office 的定义
+```C++
+struct _class_t OBJC_METACLASS_$_Office = {
+    0, // &OBJC_METACLASS_$_NSObject,
+    0, // &OBJC_METACLASS_$_NSObject,
+    0, // (void *)&_objc_empty_cache,
+    0, // unused, was (void *)&_objc_empty_vtable,
+    &_OBJC_METACLASS_RO_$_Office,
+};
+```
+其第一个字段 isa 指针同类型的链表, 永远指向根类 OBJC_METACLAS\_\$_NSObject
+第二个字段 superclass, 则指向其父类的 metaClass, 这里还是 OBJC_METACLAS\_\$_NSObject
+第三个字段 cache 用于缓存方法的, 暂时也为 空
+第四个字段 vtable 变量表为保留字段空
+第五个字段 ro 指向 _OBJC_METACLASS_RO_$_Office 这个只读链表
+```C++
+// 类结构体
+struct _class_t {
+    struct _class_t *isa;   // ISA链表
+    struct _class_t *superclass; // 父类链表
+    void *cache; // 缓存
+    void *vtable; // 变量表
+    struct _class_ro_t *ro; // 只读常量链表
+};
+```
+而_OBJC_METACLASS_RO_$_Office定义如下
+```C++ 
+static struct _class_ro_t _OBJC_METACLASS_RO_$_Office  = {
+	1, 
+    sizeof(struct _class_t),
+    sizeof(struct _class_t), 
+	(unsigned int)0, 
+	0, 
+	"Office",
+	(const struct _method_list_t *)&_OBJC_$_CLASS_METHODS_Office,
+	0, 
+	0, 
+	0, 
+	0, 
+};
+// 只读结构体
+struct _class_ro_t {
+    unsigned int flags; // 标记
+    unsigned int instanceStart; // 实例开始位置
+    unsigned int instanceSize; // 实例大小
+    unsigned int reserved; // 保留
+    const unsigned char *ivarLayout; // 变量布局
+    const char *name; // 名字
+    const struct _method_list_t *baseMethods; // 基本方法链表
+    const struct _objc_protocol_list *baseProtocols; // 基本协议链表
+    const struct _ivar_list_t *ivars; // 变量链表
+    const unsigned char *weakIvarLayout; // weak 变量
+    const struct _prop_list_t *properties; // 属性链表
+};
+```
+从以上代码看出 _OBJC_METACLASS_RO_$_Office
+第一个字段 flags 标记为1
+第二个字段 instanceStart, 开始位置为一个 _class_t 的大小
+第三个字段 instanceSize, 大小占一个 _class_t 的大小
+第四个字段 reserved 值为 0
+第五个字段 ivarLayout 值为 0
+第六个字段 name 表示类名, 这里值为 "Office"
+第七个字段 baseMethods 为_OBJC\_\$_CLASS_METHODS_Office, 存的是类方法,
+第八个字段 baseProtocols 协议为0, 表示 Office 元类没有遵守协议
+第九个字段 ivars 变量表为空, 说明元类变量表尾为空
+第十个字段 weakIvarLayout weak 变量布局为空
+第十一个字段 properties 属性链表为空
+以上是 Office metaClass
+
+再来看 OBJC_CLASS_$_Office
+isa 指向自己的 metaClass
+supperClass 指向父类的 class
+缓存和变量表为空
+最后还剩 _class_ro_t *ro指向 _OBJC_CLASS_RO\_\$_Office
+```C++
+struct _class_t OBJC_CLASS_$_Office = {
+	0, // &OBJC_METACLASS_$_Office,
+	0, // &OBJC_CLASS_$_NSObject,
+	0, // (void *)&_objc_empty_cache,
+	0, // unused, was (void *)&_objc_empty_vtable,
+	&_OBJC_CLASS_RO_$_Office,
+};
+
+static struct _class_ro_t _OBJC_CLASS_RO_$_Office = {
+	0, 
+    __OFFSETOFIVAR__(struct Office, _persons), 
+    sizeof(struct Office_IMPL), 
+	(unsigned int)0, 
+	0, 
+	"Office",
+	(const struct _method_list_t *)&_OBJC_$_INSTANCE_METHODS_Office,
+	(const struct _objc_protocol_list *)&_OBJC_CLASS_PROTOCOLS_$_Office,
+	(const struct _ivar_list_t *)&_OBJC_$_INSTANCE_VARIABLES_Office,
+	0, 
+	(const struct _prop_list_t *)&_OBJC_$_PROP_LIST_Office,
+};
+```
+从以上代码看出 _OBJC_CLASS_RO_$_Office
+第一个字段 flags 标记为0
+第二个字段 instanceStart, 起始位置为 偏移量为 objc_object Office的 _persons 变量位置, 这个根据变量定义顺序来决定的.
+第三个字段 instanceSize, 大小占一个 Office_IMPL 的大小, 也就是类实现的大小
+第四个字段 reserved 值为 0
+第五个字段 ivarLayout 值为 0
+第六个字段 name 表示类名, 这里值为 "Office"            
+第七个字段 baseMethods 为_OBJC\_\$_INSTANCE_METHODS_Office, 存的是实例方法,
+第八个字段 baseProtocols _OBJC_CLASS_PROTOCOLS\_\$_Office, 遵守的协议
+第九个字段 ivars _OBJC\_\$_INSTANCE_VARIABLES_Office 表示变量链表
+第十个字段 weakIvarLayout weak 变量布局为空
+第十一个字段 properties _OBJC\_\$_PROP_LIST_Office 表示属性链表
+以上是 Office metaClass
