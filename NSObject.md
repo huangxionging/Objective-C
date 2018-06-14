@@ -928,4 +928,29 @@ static struct _class_ro_t _OBJC_CLASS_RO_$_Office = {
 第九个字段 ivars _OBJC\_\$_INSTANCE_VARIABLES_Office 表示变量链表  
 第十个字段 weakIvarLayout weak 变量布局为空  
 第十一个字段 properties _OBJC\_\$_PROP_LIST_Office 表示属性链表  
-以上是 Office metaClass  
+以上是 Office Object_Class  
+
+下面来分析 _OBJC\_\$_INSTANCE_METHODS_Office
+```C++
+static struct /*_method_list_t*/ {
+	unsigned int entsize;  // sizeof(struct _objc_method)
+	unsigned int method_count;
+	struct _objc_method method_list[8];
+} _OBJC_$_INSTANCE_METHODS_Office = {
+	sizeof(_objc_method),
+	8,
+	{{(struct objc_selector *)"persons", "@16@0:8", (void *)_I_Office_persons},
+	{(struct objc_selector *)"init", "@16@0:8", (void *)_I_Office_init},
+	{(struct objc_selector *)"setLight:", "v24@0:8@16", (void *)_I_Office_setLight_},
+	{(struct objc_selector *)"personGoOffice:", "v24@0:8@16", (void *)_I_Office_personGoOffice_},
+	{(struct objc_selector *)"personLeaveOffice:", "v24@0:8@16", (void *)_I_Office_personLeaveOffice_},
+	{(struct objc_selector *)"retainCountOfLight", "q16@0:8", (void *)_I_Office_retainCountOfLight},
+	{(struct objc_selector *)"light", "@16@0:8", (void *)_I_Office_light},
+	{(struct objc_selector *)"setPersons:", "v24@0:8@16", (void *)_I_Office_setPersons_}}
+};
+// 可以看出来
+typedef struct objc_selector *SEL;
+```
+从以上代码可以看出, 是个结构体, 第一个参数表示 一个方法的大小, 第二个参数表示方法的个数, 第三个表示方法表数组, 数组元素为 _objc_method 实际就是 method_t *Method, 这个不用多说, 第一个是方法名称 SEL name; 第二个参数表示  const char *types; 表示类型, 第三个参数表示 IMP imp就是该方法的实现, 对应之前定义的 static 方法实现. 
+
+_OBJC\_\$_INSTANCE_VARIABLES_Office
