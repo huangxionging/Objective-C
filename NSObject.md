@@ -874,19 +874,19 @@ struct _class_ro_t {
     const struct _prop_list_t *properties; // 属性链表
 };
 ```
-从以上代码看出 _OBJC_METACLASS_RO_$_Office
-第一个字段 flags 标记为1
-第二个字段 instanceStart, 开始位置为一个 _class_t 的大小
-第三个字段 instanceSize, 大小占一个 _class_t 的大小
-第四个字段 reserved 值为 0
-第五个字段 ivarLayout 值为 0
-第六个字段 name 表示类名, 这里值为 "Office"
-第七个字段 baseMethods 为_OBJC\_\$_CLASS_METHODS_Office, 存的是类方法,
-第八个字段 baseProtocols 协议为0, 表示 Office 元类没有遵守协议
-第九个字段 ivars 变量表为空, 说明元类变量表尾为空
-第十个字段 weakIvarLayout weak 变量布局为空
-第十一个字段 properties 属性链表为空
-以上是 Office metaClass
+从以上代码看出 _OBJC_METACLASS_RO_$_Office  
+第一个字段 flags 标记为1  
+第二个字段 instanceStart, 开始位置为一个 _class_t 的大小  
+第三个字段 instanceSize, 大小占一个 _class_t 的大小  
+第四个字段 reserved 值为 0  
+第五个字段 ivarLayout 值为 0  
+第六个字段 name 表示类名, 这里值为 "Office"  
+第七个字段 baseMethods 为_OBJC\_\$_CLASS_METHODS_Office, 存的是类方法,  
+第八个字段 baseProtocols 协议为0, 表示 Office 元类没有遵守协议  
+第九个字段 ivars 变量表为空, 说明元类变量表尾为空  
+第十个字段 weakIvarLayout weak 变量布局为空  
+第十一个字段 properties 属性链表为空  
+以上是 Office metaClass  
 
 再来看 OBJC_CLASS_$_Office
 isa 指向自己的 metaClass
