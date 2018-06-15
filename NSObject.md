@@ -949,8 +949,57 @@ static struct /*_method_list_t*/ {
 	{(struct objc_selector *)"setPersons:", "v24@0:8@16", (void *)_I_Office_setPersons_}}
 };
 // 可以看出来
+typedef struct objc_method *Method;
+typedef struct method_t *Method;
 typedef struct objc_selector *SEL;
 ```
 从以上代码可以看出, 是个结构体, 第一个参数表示 一个方法的大小, 第二个参数表示方法的个数, 第三个表示方法表数组, 数组元素为 _objc_method 实际就是 method_t *Method, 这个不用多说, 第一个是方法名称 SEL name; 第二个参数表示  const char *types; 表示类型, 第三个参数表示 IMP imp就是该方法的实现, 对应之前定义的 static 方法实现. 
 
-_OBJC\_\$_INSTANCE_VARIABLES_Office
+下面分析实例变量链表 _OBJC\_\$_INSTANCE_VARIABLES_Office
+```C++
+// 变量
+struct _ivar_t {
+	unsigned long int *offset;  // pointer to ivar offset location // 偏移量
+	const char *name; // 名称
+	const char *type; // 类型
+	unsigned int alignment; // 布局
+	unsigned int  size; // 大小
+};
+
+static struct /*_ivar_list_t*/ {
+	unsigned int entsize;  // sizeof(struct _prop_t)
+	unsigned int count;
+	struct _ivar_t ivar_list[2];
+} _OBJC_$_INSTANCE_VARIABLES_Office = {
+	sizeof(_ivar_t),
+	2,
+	{{(unsigned long int *)&OBJC_IVAR_$_Office$_light, "_light", "@\"Light\"", 3, 8},
+	 {(unsigned long int *)&OBJC_IVAR_$_Office$_persons, "_persons", "@\"NSMutableArray\"", 3, 8}}
+};
+```
+
+从以上代码可以看出 _OBJC\_\$_INSTANCE_VARIABLES_Office 是一个  _ivar_list_t 结构体  
+第一个参数 entsize 应该是是 entry 大小, 占用一个 _ivar_t 的大小  
+第二个参数 count  代表实例变量的个数  
+第三个参数 _ivar_t 数组元素个数与 count 对应, 元素第一个参数 offset 偏移量代表变量的地址, 第二个参数 name 与变量名关联, 第三个参数 type 表示数据类型, 第四个参数是布局 3, 第四个参数是变量占用的大小. 8
+
+再看 _OBJC_$_PROP_LIST_Office 属性表  
+```C++
+struct _prop_t {
+    const char *name; // 名称
+    const char *attributes; // 特征
+};
+
+static struct /*_prop_list_t*/ {
+    unsigned int entsize;  // sizeof(struct _prop_t)
+    unsigned int count_of_properties;
+    struct _prop_t prop_list[2];
+} _OBJC_$_PROP_LIST_Office = {
+    sizeof(_prop_t),
+    2,
+    {{"light","T@\"Light\",&,N,V_light"},
+    {"persons","T@\"NSMutableArray\",&,N,V_persons"}}
+};
+
+```
+属性和变量类似, 从以上代码分析, 属性表的数量和大小以及名称和特征
